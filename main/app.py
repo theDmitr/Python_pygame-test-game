@@ -2,7 +2,7 @@ import pygame as pg
 from random import randint
 
 pg.init()
-
+pg.display.set_caption("Game")
 screen = pg.display.set_mode((400, 400))
 clock = pg.time.Clock()
 frameRect = pg.Rect(0, 0, 400, 400)

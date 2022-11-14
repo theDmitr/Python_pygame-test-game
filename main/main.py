@@ -137,7 +137,7 @@ class Settings:
     def init():
         Button.items = list()
         Settings.buttonMenu = Button(400 - 200 - 75, 400 - 170, 150, 50, (200, 120, 40), (100, 100, 100), "Menu")
-        Settings.label = myFont.render("В разработке...", True, (150, 150, 220))
+        Settings.label = myFont.render("In developing...", True, (150, 150, 220))
         Settings.labelRect = Settings.label.get_rect(center = (400 / 2, Settings.buttonMenu.aabb.top - 50))
     def run():
         for event in pg.event.get():
@@ -162,10 +162,10 @@ class Prompt:
     def init():
         Button.items = list()
         if Play.loose == False:
-            text = "Победа!"
+            text = "Victory!"
             color = (0, 200, 0)
         else:
-            text = "Поражение!"
+            text = "Defeat!"
             color = (200, 0, 0)
         Prompt.buttonMenu = Button(400 - 200 - 75, 400 - 170, 150, 50, (200, 120, 40), (100, 100, 100), "Menu")
         Prompt.buttonPlay = Button(400 - 200 - 75, Prompt.buttonMenu.aabb.top - 60, 150, 50, (180, 150, 50), (100, 100, 100), "Play")
