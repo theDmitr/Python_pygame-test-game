@@ -23,8 +23,8 @@ class Button(AABB):
         self.aabbBack.y += 5
         self.color1 = color1
         self.color2 = color2
-        self.text = text
-        self.font = pg.font.Font(None, 36)
+        self.text = myFont.render(text, True, self.color2)
+        self.textRect = self.text.get_rect(center=(self.aabb.centerx, self.aabb.centery))
         Button.items.append(self)
     def draw(self):
         if self.animation and pg.time.get_ticks() - self.tempTime > 30 and self.aabbBack.right < self.aabb.right + 5:
@@ -37,7 +37,7 @@ class Button(AABB):
             self.tempTime = pg.time.get_ticks()
         pg.draw.rect(screen, self.color1, self.aabbBack, 3)
         pg.draw.rect(screen, self.color1, self.aabb)
-        screen.blit(self.font.render(self.text, True, self.color2), (self.aabb.x, self.aabb.y))
+        screen.blit(self.text, self.textRect)
 
 class Entity(AABB):
     def __init__(self, x, y, w, h, color):

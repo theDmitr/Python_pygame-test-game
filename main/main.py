@@ -11,6 +11,7 @@ class Scene:
 
 class Menu:
     def init():
+        Button.items = list()
         Menu.buttonQuit = Button(400 - 200 - 75, 400 - 170, 150, 50, (250, 80, 30), (100, 100, 100), "Quit")
         Menu.buttonSettings = Button(400 - 200 - 75, Menu.buttonQuit.aabb.top - 60, 150, 50, (200, 120, 40), (100, 100, 100), "Settings")
         Menu.buttonPlay = Button(400 - 200 - 75, Menu.buttonSettings.aabb.top - 60, 150, 50, (180, 150, 50), (100, 100, 100), "Play")
@@ -28,18 +29,20 @@ class Menu:
                 elif Menu.buttonQuit.aabb.collidepoint(event.pos):
                     quit()
             elif event.type == pg.MOUSEMOTION:
-                for button in Button.items:
-                    if button.aabb.collidepoint(event.pos): 
-                        button.animation = True
-                    else: button.animation = False
+                for item in Button.items:
+                    if item.aabb.collidepoint(event.pos): 
+                        item.animation = True
+                    else: item.animation = False
+        clock.tick(60)
         screen.fill((200, 200, 200))
-        for button in Button.items: button.draw()
+        for item in Button.items: item.draw()
         pg.display.update()
 
 class Play:
     player = None
     enemy = None
     enemies = None
+    loose = False
     def init():
         Play.player = Player(0, 0, 50, 50, 3, 20)
         Play.player.aabb.move_ip(175, 325)
@@ -49,6 +52,7 @@ class Play:
         enemy.aabb.y = 50
         enemies.append(Play.enemy)
         enemy.moveRight = True
+        Play.loose = False
     def run():
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -81,9 +85,10 @@ class Play:
         # //
         for index, item in enumerate(Creature.items):
             if item.health <= 0:
+                if item == Play.player: Play.loose = True
                 Creature.items.clear()
                 Shell.shells.clear()
-                Scene.setScene(Menu)
+                Scene.setScene(Prompt)
                 return
             # // Move control
             if item.moveLeft:
@@ -130,9 +135,62 @@ class Play:
 
 class Settings:
     def init():
-        pass
+        Button.items = list()
+        Settings.buttonMenu = Button(400 - 200 - 75, 400 - 170, 150, 50, (200, 120, 40), (100, 100, 100), "Menu")
+        Settings.label = myFont.render("В разработке...", True, (150, 150, 220))
+        Settings.labelRect = Settings.label.get_rect(center = (400 / 2, Settings.buttonMenu.aabb.top - 50))
     def run():
-        screen.fill((255, 255, 255))
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                quit()
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if Settings.buttonMenu.aabb.collidepoint(event.pos):
+                    Scene.setScene(Menu)
+                    return
+            elif event.type == pg.MOUSEMOTION:
+                for item in Button.items:
+                    if item.aabb.collidepoint(event.pos): 
+                        item.animation = True
+                    else: item.animation = False
+        clock.tick(60)
+        screen.fill((200, 200, 200))
+        for item in Button.items: item.draw()
+        screen.blit(Settings.label, Settings.labelRect)
+        pg.display.update()
+
+class Prompt:
+    def init():
+        Button.items = list()
+        if Play.loose == False:
+            text = "Победа!"
+            color = (0, 200, 0)
+        else:
+            text = "Поражение!"
+            color = (200, 0, 0)
+        Prompt.buttonMenu = Button(400 - 200 - 75, 400 - 170, 150, 50, (200, 120, 40), (100, 100, 100), "Menu")
+        Prompt.buttonPlay = Button(400 - 200 - 75, Prompt.buttonMenu.aabb.top - 60, 150, 50, (180, 150, 50), (100, 100, 100), "Play")
+        Prompt.label = myFont.render(text, True, color)
+        Prompt.labelRect = Prompt.label.get_rect(center = (400 / 2, Prompt.buttonPlay.aabb.top - 50))
+    def run():
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                quit()
+            elif event.type == pg.MOUSEBUTTONDOWN:
+                if Prompt.buttonMenu.aabb.collidepoint(event.pos):
+                    Scene.setScene(Menu)
+                    return
+                elif Prompt.buttonPlay.aabb.collidepoint(event.pos):
+                    Scene.setScene(Play)
+                    return
+            elif event.type == pg.MOUSEMOTION:
+                for item in Button.items:
+                    if item.aabb.collidepoint(event.pos): 
+                        item.animation = True
+                    else: item.animation = False
+        clock.tick(60)
+        screen.fill((200, 200, 200))
+        for item in Button.items: item.draw()
+        screen.blit(Prompt.label, Prompt.labelRect)
         pg.display.update()
 
 Scene.setScene(Menu)
