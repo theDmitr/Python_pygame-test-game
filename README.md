@@ -1,1 +1,1 @@
-// This is my first python pygame source game!
+Test game in Python using the ```pygame``` library
